@@ -18,6 +18,7 @@ import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
 import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightnessOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 
 
@@ -81,6 +82,7 @@ const Button = styled.button`
 `
 
 const Menu = ({darkMode,setdarkMode}) => {
+   const {currentUser} = useSelector(state=>state.user)
   return (
     <Container>
       <Wrapper>
@@ -94,14 +96,18 @@ const Menu = ({darkMode,setdarkMode}) => {
            <HomeIcon/>
            Home
         </Item>
-        <Item>
-           <ExploreOutlinedIcon/>
-           Explore
-        </Item>
-        <Item>
-            <SubscriptionsOutlinedIcon/>
-            Subscription
-        </Item>
+        <Link to="trends" style={{textDecoration:"none",color:"inherit"}}>
+          <Item>
+            <ExploreOutlinedIcon/>
+             Explore
+          </Item>
+        </Link>
+        <Link to="subscriptions" style={{textDecoration:"none",color:"inherit"}}>
+           <Item>
+              <SubscriptionsOutlinedIcon/>
+              Subscription
+           </Item>
+        </Link>
         <Hr/>
         <Item>
             <VideoLibraryOutlinedIcon/>
@@ -112,13 +118,18 @@ const Menu = ({darkMode,setdarkMode}) => {
             History
         </Item>
         <Hr/>
-        <Login>
-          Sign in to like videos, comment, and subscribe.
-          <Link to="signin" style={{textDecoration:"none"}}>
-          <Button><AccountCircleOutlinedIcon/>SIGN IN</Button>
-          </Link>
-        </Login>
-        <Hr/>
+        {!currentUser && <>
+           <Login>
+             Sign in to like videos, comment, and subscribe.
+             <Link to="signin" style={{textDecoration:"none"}}>
+                  <Button>
+                     <AccountCircleOutlinedIcon/>SIGN IN
+                  </Button>
+              </Link>
+            </Login>
+          <Hr/>
+          </>
+        }
         <Title>Best Of Youtube</Title>
         <Item>
            <LibraryMusicOutlinedIcon/>

@@ -37,13 +37,13 @@ const Text = styled.span`
 
 const Comment = () => {
   return (
-    <container>
+    <Container>
       <Avatar src=''/>
       <Details>
          <Name>Vishal Das <Date>1 day ago</Date></Name>
          <Text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae, maxime?</Text>
       </Details>
-    </container>
+    </Container>
   )
 }
 

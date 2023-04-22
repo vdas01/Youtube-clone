@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
@@ -6,6 +6,11 @@ import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
 import Comments from '../components/Comments';
 import Card from "../components/Card"
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { fetchSuccess } from '../redux/videoSlice';
+import { format } from 'timeago.js';
 
 const Container = styled.div`
     display: flex;
@@ -96,6 +101,33 @@ font-size:14px;
 
 
 const Video = () => {
+   const {currentUser} = useSelector(state=>state.user)
+   const { currentVideo } = useSelector((state) => state.video);
+   const dispatch = useDispatch();
+   const path = useLocation().pathname.split("/")[2];
+      /* console.log(path); */
+
+   const [channel,setChannel] = useState({});
+
+   useEffect(()=>{
+      
+      const fetchData = async () =>{
+         try{
+            const videoRes = await axios.get(`/videos/find/${path}`);
+            const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`)
+              /* console.log(videoRes.data) */
+              /* console.log(channelRes.data) */
+            setChannel(channelRes.data)
+            dispatch(fetchSuccess(videoRes.data))
+            
+         }
+         catch(err){
+            console.log(err);
+         }
+      };
+      fetchData()    
+   },[path, dispatch])
+
   return (
     <Container>
         <Content>
@@ -109,11 +141,11 @@ const Video = () => {
               allowFullScreen
              ></iframe>
            </VideoWrapper>
-           <Title>Test Video</Title>
+           <Title>{currentVideo.title}</Title>
            <Details>
-              <Info>7,948,154 views . Jun 22,2022</Info>
+              <Info>{currentVideo.views} views . {format(currentVideo.createdAt)}</Info>
               <Buttons>
-                  <Button><ThumbUpOutlinedIcon/>123</Button>
+                  <Button><ThumbUpOutlinedIcon/>{currentVideo.likes?.length}</Button>
                   <Button><ThumbDownOutlinedIcon/>Dislike</Button>
                   <Button><ReplyOutlinedIcon/>Share</Button>
                   <Button><AddTaskOutlinedIcon/>Save</Button>
@@ -122,12 +154,15 @@ const Video = () => {
            <Hr/>
            <Channel>
              <ChannelInfo>
-                <Image src=''/>
+                <Image src={channel.img}/>
                 <ChannelDetail>
-                  <ChannelName>Vishal Das</ChannelName>
-                  <ChannelCounter>200k subscribers</ChannelCounter>
-                  <Description>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, aut eum nulla veritatis laborum ipsa placeat
-                   dolores fuga molestias ullam. Modi voluptatum sit dicta quibusdam praesentium commodi qui assumenda sapiente.</Description>
+                  <ChannelName>{channel.name}</ChannelName>
+                  <ChannelCounter>{channel.subscribers} Subscribers</ChannelCounter>
+                  <Description>
+                  {
+                     currentVideo.desc
+                  }
+                  </Description>
                 </ChannelDetail> 
              </ChannelInfo>
              <Subscribe>SUBSCRIBE</Subscribe>
@@ -136,14 +171,18 @@ const Video = () => {
            <Comments/>
         </Content>
 
-        <Recommendation>
+        {
+         /* 
+         <Recommendation>
            <Card type="sm"/>
            <Card type="sm"/>
            <Card type="sm"/>
            <Card type="sm"/>
            <Card type="sm"/>
            <Card type="sm"/>
-        </Recommendation>
+         </Recommendation>
+           */
+      }
     </Container>
   )
 }
