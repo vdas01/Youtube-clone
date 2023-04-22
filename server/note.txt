@@ -1,0 +1,10 @@
+react,nodejs,mongo,firebase
+able to login or register or login using google using firebase
+can like and dislike add comment and subscribe to any channel
+explore brings trending video
+recommendation bar which recommends using tags
+search bar for searching 
+uploading video which will be stored in google firebase storage
+provides security using jwt
+databasevd04
+vdas04
