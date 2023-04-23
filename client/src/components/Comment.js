@@ -1,4 +1,5 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 
@@ -35,13 +36,23 @@ const Text = styled.span`
 `
 
 
-const Comment = () => {
+const Comment = ({comment}) => {
+  const [channel,setChannel] = useState({});
+  useEffect(()=>{
+    const fetchComment = async()=>{
+      const res = await axios.get(`/users/find/${comment.userId}`)
+      setChannel(res.data)
+    }
+    fetchComment()
+  },[comment.userId])
   return (
     <Container>
-      <Avatar src=''/>
+      <Avatar src={channel.img}/>
       <Details>
-         <Name>Vishal Das <Date>1 day ago</Date></Name>
-         <Text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae, maxime?</Text>
+         <Name>{channel.name}<Date>1 day ago</Date></Name>
+         <Text>{
+          comment.desc
+         }</Text>
       </Details>
     </Container>
   )
