@@ -3,8 +3,10 @@ import styled from 'styled-components'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
+import { useState } from 'react';
+import Upload from './Upload';
 
 
 const Container = styled.div`
@@ -12,7 +14,7 @@ const Container = styled.div`
     top: 0;
     background-color: ${({theme})=>theme.bgLighter};
     height: 56px;
-    color:${({theme})=>theme.text}
+    color:${({theme})=>theme.text};
     z-index: 5;
 `
 
@@ -33,14 +35,16 @@ const Search = styled.div`
    display: flex;
    align-items: center;
    justify-content: space-between;
-   padding: 5px;
    border: 1px solid #ccc;
    border-radius: 3px;
 `
 const Input = styled.input`
   border: none;
   background-color: transparent;
-
+  color:${({theme})=>theme.text};
+  width: 100%;
+  height: 100%;
+  padding: 10px;
 `
 const Button = styled.button`
    padding: 5px 15px;
@@ -69,17 +73,21 @@ const Avatar = styled.img`
 `;
 
 const Navbar = () => {
-   const {currentUser} = useSelector(state=>state.user)
+   const {currentUser} = useSelector(state=>state.user);
+   const [q, setQ] = useState("");
+   const [open, setOpen] = useState(false);
+   const navigate = useNavigate();
   return (
+   <>
     <Container>
        <Wrapper>
           <Search>
-             <Input placeholder='Search'/>
-             <SearchOutlinedIcon/>
+             <Input placeholder='Search' onChange={e => setQ(e.target.value)}/>
+             <SearchOutlinedIcon onClick={()=> navigate(`/search?q=${q}`)}/>
           </Search>
           {currentUser?
             ( <User>
-                  <VideoCallOutlinedIcon/>
+                  <VideoCallOutlinedIcon onClick={() => setOpen(true)}/>
                   <Avatar src={currentUser.img}/>
                   {currentUser.name}
               </User>
@@ -92,6 +100,10 @@ const Navbar = () => {
            )}
        </Wrapper>
     </Container>
+    {open && <Upload setOpen={setOpen}/>
+       
+    }
+ </>
   )
 }
 

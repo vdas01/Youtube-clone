@@ -14,6 +14,7 @@ import axios from 'axios';
 import { dislike, fetchSuccess, like } from '../redux/videoSlice';
 import { format } from 'timeago.js';
 import { subscription } from '../redux/userSlice';
+import Recommendation from '../components/Recommendation';
 
 const Container = styled.div`
     display: flex;
@@ -22,9 +23,7 @@ const Container = styled.div`
 const Content = styled.div`
    flex: 5;
 `
-const Recommendation = styled.div`
-   flex: 2;
-`
+
 const VideoWrapper = styled.div`
    
 `
@@ -156,7 +155,7 @@ const Video = () => {
     <Container>
         <Content>
            <VideoWrapper>
-              <VideoFrame src={currentVideo.videoUrl}/>
+              <VideoFrame src={currentVideo.videoUrl} controls/>
            </VideoWrapper>
            <Title>{currentVideo.title}</Title>
            <Details>
@@ -210,16 +209,7 @@ const Video = () => {
         </Content>
 
         {
-         /* 
-         <Recommendation>
-           <Card type="sm"/>
-           <Card type="sm"/>
-           <Card type="sm"/>
-           <Card type="sm"/>
-           <Card type="sm"/>
-           <Card type="sm"/>
-         </Recommendation>
-           */
+         <Recommendation tags={currentVideo.tags}/>
       }
     </Container>
   )
